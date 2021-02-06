@@ -16,3 +16,15 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->group(['prefix' => 'api'], function () use ($router) {
+    // jwt 発行のためのルーティング 発行が必要な場合はコメントアウトを外す
+    //$router->post('register', 'AuthController@register');
+
+    $router->post('login', 'AuthController@login');
+});
+
+// 認証後のAPIルート
+$router->group(['prefix' => 'api', 'middleware' => 'auth'], function () use ($router) {
+    $router->get('me', 'AuthController@me');
+});
