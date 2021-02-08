@@ -10,3 +10,13 @@ Laravel の マイクロフレームワーク [Lumen](https://lumen.laravel.com/
 ```
 ・Lumen v8.2.2
 ```
+
+### エンドポイント
+
+```
+プレフィックス /api/
+GET    favorites       Favorite一覧取得
+POST   faovrites       Favorite登録
+GET    favorites/{id}  id が {id} のFavorite取得
+DELETE favorites/{id}  id が {id} のFavorite削除
+```
