@@ -27,4 +27,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 // 認証後のAPIルート
 $router->group(['prefix' => 'api', 'middleware' => 'auth'], function () use ($router) {
     $router->get('me', 'AuthController@me');
+    $router->get('favorites', 'FavoriteController@index');
+    $router->post('favorites', 'FavoriteController@store');
+    $router->get('favorites/{favorite_id}', 'FavoriteController@show');
+    $router->delete('favorites/{favorite_id}', 'FavoriteController@destroy');
 });
