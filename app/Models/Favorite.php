@@ -26,11 +26,25 @@ class Favorite extends Model
      */
     protected $hidden = [];
 
+    public function deletedFavorite($request)
+    {
+        $deleted_favorite = Favorite::onlyTrashed()
+                                ->where('track', $request->track)
+                                ->where('artist', $request->artist);
+
+        if ($deleted_favorite->exists()) {
+            return $deleted_favorite;
+        } else {
+            return null;
+        }
+    }
+
     public function existFavorite($request)
     {
         return DB::table('favorites')
                     ->where('track', $request->track)
                     ->where('artist', $request->artist)
+                    ->whereNull('deleted_at')
                     ->exists();
     }
 }
