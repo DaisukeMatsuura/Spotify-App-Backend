@@ -45,7 +45,7 @@ class FavoriteController extends Controller
             'album'        => 'required',
             'artist'       => 'required',
             'image_path'   => 'required',
-            'release_date' => 'required | date',
+            'release_date' => 'required',
         ]);
 
         // exist check

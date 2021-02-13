@@ -19,7 +19,7 @@ class CreateFavoritesTable extends Migration
             $table->string('album');
             $table->string('artist');
             $table->string('image_path');
-            $table->date('release_date');
+            $table->string('release_date');
             $table->timestamps();
             $table->softDeletes();
         });
