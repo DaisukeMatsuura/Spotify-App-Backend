@@ -47,4 +47,9 @@ class Favorite extends Model
                     ->whereNull('deleted_at')
                     ->exists();
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
