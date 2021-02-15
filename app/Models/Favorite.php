@@ -35,7 +35,21 @@ class Favorite extends Model
         if ($deleted_favorite->exists()) {
             return $deleted_favorite;
         } else {
-            return null;
+            return false;
+        }
+    }
+
+    public function deletedFavoriteUsers($request)
+    {
+        $deleted_favorite = Favorite::onlyTrashed()
+            ->where('track', $request->track)
+            ->where('artist', $request->artist)
+            ->where('user_id', $request->user_id);
+
+        if ($deleted_favorite->exists()) {
+            return $deleted_favorite;
+        } else {
+            return false;
         }
     }
 
@@ -44,8 +58,33 @@ class Favorite extends Model
         return DB::table('favorites')
                     ->where('track', $request->track)
                     ->where('artist', $request->artist)
+                    ->whereNull('user_id')
                     ->whereNull('deleted_at')
                     ->exists();
+    }
+
+    public function existFavoriteUsers($request)
+    {
+        return DB::table('favorites')
+                    ->where('track', $request->track)
+                    ->where('artist', $request->artist)
+                    ->where('user_id', $request->user_id)
+                    ->whereNull('deleted_at')
+                    ->exists();
+    }
+
+    static function searchFavoriteById($favorite_id)
+    {
+        return  Favorite::where('id', $favorite_id)
+                        ->whereNull('user_id')
+                        ->firstOrFail();
+    }
+
+    static function searchFavoriteUsersById($favorite_id, $user_id)
+    {
+        return  Favorite::where('id', $favorite_id)
+                        ->where('user_id', $user_id)
+                        ->firstOrFail();
     }
 
     public function user()

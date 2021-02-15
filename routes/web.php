@@ -23,12 +23,21 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('login', 'AuthController@login');
 });
 
+// 認証不要のAPIルート
+$router->group(['prefix' => 'api/general'], function () use ($router) {
+    $router->get('favorites', 'FavoriteController@index');
+    $router->post('favorites', 'FavoriteController@store');
+    $router->delete('favorites/{favorite_id}', 'FavoriteController@destroy');
+});
+
 // 認証後のAPIルート
 $router->group(['prefix' => 'api', 'middleware' => 'auth'], function () use ($router) {
     $router->get('me', 'AuthController@me');
-    $router->get('favorites', 'FavoriteController@index');
-    $router->post('favorites/{user_id}', 'FavoriteController@userFavorites');
-    $router->post('favorites', 'FavoriteController@store');
+    $router->post('favorites/users/{user_id}', 'FavoriteController@userFavoritesIndex');
+    $router->post('favorites/users', 'FavoriteController@userFavoriteCreate');
     $router->get('favorites/{favorite_id}', 'FavoriteController@show');
-    $router->delete('favorites/{favorite_id}', 'FavoriteController@destroy');
+    $router->delete('favorites/{favorite_id}/users/{user_id}', 'FavoriteController@userFavoriteDestroy');
 });
+
+
+

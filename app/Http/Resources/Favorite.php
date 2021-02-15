@@ -26,7 +26,15 @@ class Favorite extends JsonResource
                     'artist'       => $this->artist,
                     'image_path'   => $this->image_path,
                     'release_date' => $this->release_date,
-                ]
+                ],
+                'relationships' => [
+                    'user' => [
+                        'data' => [
+                            'user_id'   => $this->user ? $this->user->id : '',
+                            'user_name' => $this->user ? $this->user->username : '',
+                        ]
+                    ]
+                ],
             ],
             'links' => [
                 'self' => url('/api/favorites/'.$this->id),
