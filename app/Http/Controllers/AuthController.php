@@ -28,7 +28,7 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $this->validate($request, [
-            'username' => 'required|unique:users,username,1,id',
+            'username' => 'required|unique:users|min:5|max:20',
             'password' => 'required|confirmed'
         ]);
 
@@ -102,7 +102,7 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() / 1440 . 'days',
-            'suth' => auth()
+            'auth' => auth()->user()
         ]);
     }
 }

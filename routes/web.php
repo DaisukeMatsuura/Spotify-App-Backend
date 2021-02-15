@@ -17,10 +17,9 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
+// jwt 発行およびログインのためのルーティング
 $router->group(['prefix' => 'api'], function () use ($router) {
-    // jwt 発行のためのルーティング 発行が必要な場合はコメントアウトを外す
-    //$router->post('register', 'AuthController@register');
-
+    $router->post('register', 'AuthController@register');
     $router->post('login', 'AuthController@login');
 });
 
@@ -28,6 +27,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 $router->group(['prefix' => 'api', 'middleware' => 'auth'], function () use ($router) {
     $router->get('me', 'AuthController@me');
     $router->get('favorites', 'FavoriteController@index');
+    $router->post('favorites/{user_id}', 'FavoriteController@userFavorites');
     $router->post('favorites', 'FavoriteController@store');
     $router->get('favorites/{favorite_id}', 'FavoriteController@show');
     $router->delete('favorites/{favorite_id}', 'FavoriteController@destroy');

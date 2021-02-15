@@ -2,22 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\FavoriteNotFoundException;
 use App\Models\Favorite;
+use App\Models\User;
 use App\Http\Resources\Favorite as FavoriteResource;
 use App\Http\Resources\FavoriteCollection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Exceptions\FavoriteNotFoundException;
+use App\Exceptions\UserNotFoundException;
 
 use App\Exceptions\FavoriteBadRequest;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Exceptions\UserNotDefinedException;
 
 class FavoriteController extends Controller
 {
     public function index(Favorite $favorite)
     {
-        // exist check exception
+        // Favorite exist check exception
         try {
-            Favorite::all();
+            $favorite->firstOrFail();
         } catch (ModelNotFoundException $e) {
             throw new FavoriteNotFoundException();
         }
@@ -25,9 +28,26 @@ class FavoriteController extends Controller
         return new FavoriteCollection($favorite->all());
     }
 
+    public function userFavorites($user_id)
+    {
+        // User exist check exception
+        try {
+            $favorites = User::findOrFail($user_id)->favorites();
+        } catch (ModelNotFoundException $e) {
+            throw new UserNotFoundException();
+        }
+
+        // Favorite exist check exception
+        if (!$favorites->exists()) {
+            throw new FavoriteNotFoundException();
+        }
+
+        return new FavoriteCollection($favorites->get());
+    }
+
     public function show($favorite_id)
     {
-        // exist check exception
+        // Favorite exist check exception
         try {
            $favorite = Favorite::findOrFail($favorite_id);
         } catch (ModelNotFoundException $e) {
@@ -46,9 +66,10 @@ class FavoriteController extends Controller
             'artist'       => 'required',
             'image_path'   => 'required',
             'release_date' => 'required',
+            'user_id'      => 'required',
         ]);
 
-        // exist check
+        // Duplicate registration check
         $favorite = new Favorite();
         if ($favorite->existFavorite($request)) {
             throw new FavoriteBadRequest();
@@ -65,14 +86,16 @@ class FavoriteController extends Controller
         }
 
         //insert new record
-        $favorite->fill($request->only(['track', 'album', 'artist', 'image_path', 'release_date']))->save();
+        $favorite->fill($request->only([
+            'track', 'album', 'artist', 'image_path', 'release_date', 'user_id'
+        ]))->save();
 
         return new FavoriteResource($favorite);
     }
 
     public function destroy($favorite_id)
     {
-        // exist check exception
+        // Favorite exist check exception
         try {
             $favorite = Favorite::findOrFail($favorite_id);
         } catch (ModelNotFoundException $e) {
