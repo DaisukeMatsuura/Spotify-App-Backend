@@ -33,10 +33,10 @@ $router->group(['prefix' => 'api/general'], function () use ($router) {
 // 認証後のAPIルート
 $router->group(['prefix' => 'api', 'middleware' => 'auth'], function () use ($router) {
     $router->get('me', 'AuthController@me');
-    $router->post('favorites/users/{user_id}', 'FavoriteController@userFavoritesIndex');
-    $router->post('favorites/users', 'FavoriteController@userFavoriteCreate');
-    $router->get('favorites/{favorite_id}', 'FavoriteController@show');
-    $router->delete('favorites/{favorite_id}/users/{user_id}', 'FavoriteController@userFavoriteDestroy');
+    $router->get('users/{user_id}/favorites', 'FavoriteController@userFavoritesIndex');
+    $router->post('users/{user_id}/favorites', 'FavoriteController@userFavoriteCreate');
+    //$router->get('favorites/{favorite_id}', 'FavoriteController@show');
+    $router->delete('users/{user_id}/favorites/{favorite_id}', 'FavoriteController@userFavoriteDestroy');
 });
 
 
