@@ -19,16 +19,15 @@ class FavoriteController extends Controller
     /**
      *  認証不要 function => (index, show, store, destroy)
      */
-    public function index(Favorite $favorite)
+    public function index()
     {
         // Favorite exist check exception
-        try {
-            $favorite->firstOrFail();
-        } catch (ModelNotFoundException $e) {
+        $favorites =  Favorite::searchPublicFavorite();
+        if ($favorites->doesntExist()) {
             throw new FavoriteNotFoundException();
         }
 
-        return new FavoriteCollection($favorite->all());
+        return new FavoriteCollection($favorites->get());
     }
 
     public function show($favorite_id)

@@ -73,6 +73,12 @@ class Favorite extends Model
                     ->exists();
     }
 
+    static function searchPublicFavorite()
+    {
+        return Favorite::whereNull('user_id')
+                    ->whereNull('deleted_at');
+    }
+
     static function searchFavoriteById($favorite_id)
     {
         return  Favorite::where('id', $favorite_id)
